@@ -19,7 +19,11 @@ public class Example_puzzle {
 }
 
 
-// 始终并行的方法执行
+/**
+ * 始终并行的方法执行
+ * @param <P>
+ * @param <M>
+ */
 class ConcurrentPuzzleSolver<P, M> {
     private final Puzzle<P, M> puzzle ;
     private final ExecutorService exec ;
@@ -68,7 +72,11 @@ class ConcurrentPuzzleSolver<P, M> {
     }
 }
 
-// 使用串行的方法执行
+/**
+ * 使用串行的方法执行
+ * @param <P>
+ * @param <M>
+ */
 class SequentialPuzzleSolver<P, M> {
     private final Puzzle<P, M> puzzle ;
     private final Set<P> seen = new HashSet<P>() ;
