@@ -78,14 +78,12 @@ class SequentialPuzzleSolver<P, M> {
     }
 
     public List<M> solve() {
-        // todo
         P pos = puzzle.initialPosition();
         List<M> searchRes = this.search(new Node<P, M>(pos, null, null));
         return searchRes ;
     }
 
     public List<M> search(Node<P, M> node) {
-        // todo
         if(!seen.contains(node)) {
             seen.add(node.pos) ;
             if (puzzle.isGoal(node.pos)) {
