@@ -1,8 +1,12 @@
 package com.tjlcast._3th;
 
+import com.tjlcast._3th.data.*;
 import jdk.nashorn.internal.ir.annotations.Immutable;
 
 import java.math.BigInteger;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 /**
@@ -54,9 +58,8 @@ class MutableInteger {
 }
 
 
-@ThreadSafe
 class SynchronizedInteger {
-    @GuardedBy("this") private int value ;
+    private int value ;
 
     public synchronized int get() { return value ; }
     public synchronized void set(int value) { this.value = value ; }
@@ -85,15 +88,15 @@ class SynchronizedInteger {
 /**
  * 使用工厂方法来防止this引用在构造过程中溢出
  */
-public class SafeListener {
+class SafeListener {
     private final EventListener listener ;
 
-    private SafaListener() {
-        listener = new EventListenser() {
+    public SafeListener() {
+        this.listener = new EventListener() {
             public void onEvent(Event e) {
                 doSomething(e) ;
             }
-        }
+        } ;
     }
 
     public static SafeListener newInstance(EventSource source) {
@@ -101,13 +104,17 @@ public class SafeListener {
         source.registerListener(safe.listener) ;
         return safe ;
     }
+
+    public void doSomething(Event e) {
+        return ;
+    }
 }
 
 
 /**
  * 隐式地使this引用溢出(don't do this)
  */
-public class ThisEscap {
+class ThisEscap {
     public ThisEscap(EventSource source) {
         source.registerListener (
                 new EventListener() {
@@ -115,8 +122,12 @@ public class ThisEscap {
                         doSomething(e) ;
                     }
                 }
-        )
+        ) ;
         // SafeListener.newInstance
+    }
+
+    public void doSomething(Event e) {
+        return ;
     }
 }
 
@@ -129,10 +140,12 @@ public class ThisEscap {
  * 中，每个线程都会拥有属于自己的连接。
  */
 
-public class _4JDBC {
+class _4JDBC {
+    public static final String DB_URL = "hello world" ;
+
     private static ThreadLocal<Connection> connectionHolder =
             new ThreadLocal<Connection>() {
-                public Connection inititalValue() {
+                public Connection inititalValue() throws SQLException {
                     return DriverManager.getConnection(DB_URL) ;
                 }
             } ;
@@ -175,13 +188,18 @@ class OneValueCache {
         else
             return Arrays.copyOf(lastFactors, lastFactors.length) ;
     }
+
+    BigInteger[] getFactors(BigInteger i) {
+        BigInteger[] list = {new BigInteger("1"), new BigInteger("2")} ;
+        return list ;
+    }
 }
-@ThreadSafe
-public class VolatileCacheFactorizer implements Servlet {
+
+class VolatileCacheFactorizer implements Servlet {
     private volatile  OneValueCache cache =
             new OneValueCache(null, null) ;
 
-    public void service(ServletRequest req, ServletResposne resp) {
+    public void service(ServletRequest req, ServletResponse resp) {
         BigInteger i = extractFromRequest(req) ;
         BigInteger[] factors = cache.getFactors(i) ;
         if (factors == null) {
@@ -189,5 +207,18 @@ public class VolatileCacheFactorizer implements Servlet {
             cache = new OneValueCache(i, factors) ; // 对变量引用进行赋值，而非修改变量
         }
         encodeIntoResposne(resp, factors) ;
+    }
+
+    private void encodeIntoResposne(ServletResponse resp, BigInteger[] factors) {
+    }
+
+    private BigInteger[] factors(BigInteger i) {
+        return null ;
+    }
+
+
+    @Override
+    public BigInteger extractFromRequest(ServletRequest req) {
+        return null;
     }
 }

@@ -1,5 +1,9 @@
 package com.tjlcast._2th;
 
+import com.tjlcast._2th.data.ExpensiveObject;
+import com.tjlcast._3th.data.*;
+
+import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -26,11 +30,22 @@ public class StatelessFactorizer {
         // 只有当Servlet在处理请求时需要保存一些信息，线程安全性才会成为一个问题。
 
     }
+
+    private BigInteger[] factor(BigInteger i) {
+        return new BigInteger[0];
+    }
+
+    private void encodeIntoResponse(ServletResponse resp, BigInteger[] factors) {
+        return ;
+    }
+
+    private BigInteger extractFromRequest(ServletRequest req) {
+        return null;
+    }
 }
 
 
-@NotThreadSafe
-public class UnsafeCountingFactorizer implements Servlet {
+class UnsafeCountingFactorizer implements Servlet {
     private long count = 0 ;
 
     public long getCount() { return count ; }
@@ -42,6 +57,19 @@ public class UnsafeCountingFactorizer implements Servlet {
         encodeIntoResponse(resp, factors) ;
     }
 
+    private void encodeIntoResponse(ServletResponse resp, BigInteger[] factors) {
+        
+    }
+
+    private BigInteger[] facotr(BigInteger i) {
+        return new BigInteger[0];
+    }
+
+    @Override
+    public BigInteger extractFromRequest(ServletRequest req) {
+        return null;
+    }
+
     /**
      * 在本类中存在多个竞态条件，从而使结果变得不可靠。当某个计算的正确性取决于多个线程的
      * 交替执行时序时，那么就会发生竞态条件。(Race Condition)
@@ -49,8 +77,7 @@ public class UnsafeCountingFactorizer implements Servlet {
 }
 
 
-@NotThreadSafe
-public class LazyInitRace {
+class LazyInitRace {
     private ExpensiveObject instance = null ;
 
     public ExpensiveObject getInstance() {
@@ -66,8 +93,7 @@ public class LazyInitRace {
 }
 
 
-@ThreadSafe
-public class CountingFactorizer implements Servlet {
+class CountingFactorizer implements Servlet {
     private final AtomicLong count = new AtomicLong(0) ;
 
     public long getCount() { return count.get(); }
@@ -77,6 +103,19 @@ public class CountingFactorizer implements Servlet {
         BigInteger[] factors = factor(i) ;
         count.incrementAndGet() ;
         encodeIntoResponse(resp, factors) ;
+    }
+
+    private void encodeIntoResponse(ServletResponse resp, BigInteger[] factors) {
+        
+    }
+
+    private BigInteger[] factor(BigInteger i) {
+        return new BigInteger[0];
+    }
+
+    @Override
+    public BigInteger extractFromRequest(ServletRequest req) {
+        return null;
     }
 
     /**
@@ -90,10 +129,9 @@ public class CountingFactorizer implements Servlet {
 // 内置锁将会关联一个获取计数值和一个所有者线程。
 // 类方法，锁加载到实例对象。
 // 静态方法，锁加载到Class对象。
-@TreadSafe
-public class SynchronizedFactorizer implements Servlet {
-    @GuardedBy("this") private BigInteger lastNumber ;
-    @GuardedBy("this") private BigInteger[] lastFactors ;
+class SynchronizedFactorizer implements Servlet {
+    private BigInteger lastNumber ;
+    private BigInteger[] lastFactors ;
 
     public synchronized void service(ServletRequest req,
                                      ServletResponse resp) {
@@ -105,8 +143,26 @@ public class SynchronizedFactorizer implements Servlet {
             BigInteger[] facotors = factor(i) ;
             lastNumber = i ;
             lastFactors = facotors ;
-            encodingIntoResponse(resp, factors) ;
+            encodingIntoResponse(resp, facotors) ;
         }
+    }
+
+    private void encodeIntoResponse(ServletResponse resp, BigInteger[] lastFactors) {
+
+    }
+
+    public void encodingIntoResponse(ServletResponse resp, BigInteger[] facotors) {
+
+    }
+
+    private BigInteger[] factor(BigInteger i) {
+        return new BigInteger[0];
+    }
+
+
+    @Override
+    public BigInteger extractFromRequest(ServletRequest req) {
+        return null;
     }
 }
 
@@ -129,12 +185,11 @@ class LoggingWidge extends Widget {
  * 约定：将所有的可变状态都封装在对象内部，并通过对象的内置锁对所有访问可变状态的代码路径进行同步。
  */
 
-@ThreadSafe
-public class CachedFactorizer implements Servlet {
-    @GuardedBy("this") private BigInteger lastNumber ;
-    @GuardedBy("this") private BigInteger[] lastFactors ;
-    @GuardedBy("this") private long hits ;
-    @GuardedBy("this") private long cacheHits ;
+class CachedFactorizer implements Servlet {
+    private BigInteger lastNumber ;
+    private BigInteger[] lastFactors ;
+    private long hits ;
+    private long cacheHits ;
 
     public synchronized long getHits() { return hits; }
     public synchronized double getCacheHitRatio() {
@@ -162,6 +217,19 @@ public class CachedFactorizer implements Servlet {
         }
 
         encodeIntoResponse(resp, factors) ;
+    }
+
+    private BigInteger[] factors(BigInteger i) {
+        return new BigInteger[0];
+    }
+
+    private void encodeIntoResponse(ServletResponse resp, BigInteger[] factors) {
+        
+    }
+
+    @Override
+    public BigInteger extractFromRequest(ServletRequest req) {
+        return null;
     }
 }
 
