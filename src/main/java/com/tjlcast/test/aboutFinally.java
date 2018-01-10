@@ -9,10 +9,10 @@ public class aboutFinally {
 
         try {
             System.out.println("this is try") ;
-
-            return ;
+            int i = 1 / 0;
         } catch (Exception e) {
             System.out.println("this is catch") ;
+            return ;
         } finally {
             System.out.println("this is finally") ;
         }
