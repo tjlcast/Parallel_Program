@@ -19,6 +19,8 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * 每一个NioReactorThread内部有：
  *  等待处理的连接队列 和 一个处理线程
+ *
+ *  一个selector负责一组SocketChannel的读写
  */
 public class NioReactorThread extends Thread {
 
