@@ -39,7 +39,7 @@ public class SubReactorThreadGroup {
         nioThreads = new SubReactorThread[this.nioThreadCount] ;
         for(int i=0; i<this.nioThreadCount; i++) {
             this.nioThreads[i] = new SubReactorThread(businessExecutorPool) ;
-            this.nioThreads[i].start() ;
+            this.nioThreads[i].start() ; // 构造方法中启动线程，由于nioThreads不会对外暴露，故不会引起线程逃逸
         }
 
         System.out.println("the size of subReactorThreadGroup is: " + nioThreadCount) ;
