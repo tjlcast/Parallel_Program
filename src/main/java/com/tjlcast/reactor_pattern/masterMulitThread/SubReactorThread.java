@@ -42,6 +42,7 @@ public class SubReactorThread extends Thread {
     }
 
     /**
+     * socket channel.
      *
      * @param task
      */
@@ -96,6 +97,29 @@ public class SubReactorThread extends Thread {
                 } catch (Throwable e) {
                     e.printStackTrace();
                     System.out.println("客户端主动断开连接...") ;
+                }
+            }
+
+            // 注册事件
+            if (!taskList.isEmpty()) {
+                try {
+                    taskMainLock.lock();
+                    for(Iterator<NioTask> it = taskList.iterator(); it.hasNext();) {
+                        NioTask task = it.next();
+                        try {
+                            SocketChannel clientChannel = task.getClientChannel();
+                            if (task.getData() != null) {
+                                clientChannel.register(selector, task.getOp(), task.getData()) ;
+                            } else {
+                                clientChannel.register(selector, task.getOp()) ;
+                            }
+                        } catch (Throwable e) {
+                            e.printStackTrace(); // ignore.
+                        }
+                        it.remove();
+                    }
+                } finally {
+                    taskMainLock.unlock();
                 }
             }
         }
