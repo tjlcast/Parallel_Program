@@ -9,6 +9,8 @@ import java.util.Set;
  * Created by tangjialiang on 2018/1/11.
  *
  * 主要作为连接请求处理的反应堆
+ *
+ * Main Reactor,监听客户端连接的反应堆，这里使用jdk并发中的Executors.newSingleThreadExecutor线程池来实现，监听客户端的连接事件(OP_ACCEPT)
  */
 public class MainReactor implements Runnable {
 

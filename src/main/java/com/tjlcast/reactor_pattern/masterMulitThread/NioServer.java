@@ -20,6 +20,8 @@ public class NioServer {
 
     /**
      * Acceptor 可以理解为启动类
+     *
+     * Acceeptor,职责，维护java.nio.ServerSocketChannel类，绑定服务端监听端口，然后将该通道注册到MainRector中；
      */
     private static final class Acceptor implements Runnable {
 

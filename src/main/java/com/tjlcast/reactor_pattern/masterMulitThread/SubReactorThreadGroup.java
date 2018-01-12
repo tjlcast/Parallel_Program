@@ -12,6 +12,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by tangjialiang on 2018/1/11.
  *
  * nio 线程组， 简易的nio线程组
+ *
+ *  * Sub Reactor,目前没有使用jdk的并发池，这里用的SubReactorThreadGroup,其实现是数组，当然这里也可以使用jdk线程池，
+ * SubReactor的每一个线程都是IO线程，用来处理读，写事件。所有的IO线程公用一个业务线程池（基于juc）实现，用来处理业务逻辑，
+ * 也就是运行Handel的地方。
  */
 public class SubReactorThreadGroup {
 
@@ -45,6 +49,10 @@ public class SubReactorThreadGroup {
         System.out.println("the size of subReactorThreadGroup is: " + nioThreadCount) ;
     }
 
+    /**
+     * 把事件Channel分配到某个线程。
+     * @param clientChannel
+     */
     public void dispatch(SocketChannel clientChannel) {
         this.next().resgister(new NioTask(clientChannel, SelectionKey.OP_READ));
     }
