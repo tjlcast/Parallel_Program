@@ -30,20 +30,31 @@ public class FairLock {
                     return ;
                 }
             }
-        }
 
-        try {
-            queueObject.doWait();
-        } catch (InterruptedException e) {
-            synchronized (this) {
-                waitingThreads.remove(queueObject) ;
+            try {
+                queueObject.doWait();
+            } catch (InterruptedException e) {
+                synchronized (this) {
+                    waitingThreads.remove(queueObject) ;
+                }
+                throw e ;
             }
-            throw e ;
         }
     }
 
-    public synchronized void unlock() {}
+    public synchronized void unlock() throws InterruptedException {
+        if (this.lockingThread != Thread.currentThread()) {
+            throw new IllegalMonitorStateException("Calling thread has not locked this lock") ;
+        }
+        isLocked = false ;
+        lockingThread = null ;
+        if (waitingThreads.size() > 0) {
+            waitingThreads.get(0).doNotify();
+        }
+    }
 }
+
+
 
 
 class QueueObject {
