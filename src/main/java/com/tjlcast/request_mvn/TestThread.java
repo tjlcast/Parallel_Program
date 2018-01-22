@@ -15,7 +15,7 @@ public class TestThread implements Runnable {
         TestThread.request = request ;
     }
 
-    public void init() {
+    private void init() {
         HttpRequestImpl requestImpl = new HttpRequestImpl() ;
         requestImpl.d = Math.random();
         Factory.getInstance().setObject(requestImpl);
